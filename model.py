@@ -97,7 +97,7 @@ class DemoClassifier:
     def load(self):
         self.model = joblib.load(self.model_path)
 
-# python3 -m WintonOverwat train
+# pythonmodel.py om model te laten trainen en correlatie matrix te maken
 # python3 -m WintonOverwat predict competitie.csv
 
 if __name__ == "__main__":
