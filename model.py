@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 import joblib
 import os
-from sklearn.model_selection import train_test_split
+from sklearn.model_selection import train_test_split, GridSearchCV
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
 
@@ -31,7 +31,7 @@ class DemoClassifier:
         return df
 
     # Trainen
-    def train(self, filename="/homes/jveenstra4/hanzejaar2/p3/machine_learning/competitie/WintonOverwat/data/data-studenten.csv"):
+    def train(self, filename="data-studenten.csv"):
         df = pd.read_csv(filename)
 
         df["prognose10jaar"] = df["prognose10jaar"].map({"CHD+": 1, "CHD-": 0})
@@ -41,14 +41,29 @@ class DemoClassifier:
             df,
             test_size=0.10,
             random_state=42,
-            stratify=df["prognose10jaar"]
-        )
+            stratify=df["prognose10jaar"])
 
         X_train = train_df.drop(columns=["prognose10jaar"])
         y_train = train_df["prognose10jaar"]
 
-        self.model = RandomForestClassifier(n_estimators=300, random_state=42)
-        self.model.fit(X_train, y_train)
+        param_grid = {
+            "n_estimators": [200, 300, 500],
+            "max_depth": [None, 10, 20],
+            "min_samples_split": [2, 5],
+            "min_samples_leaf": [1, 2],
+            "max_features": ["sqrt", "log2"]}
+
+        grid = GridSearchCV(
+            RandomForestClassifier(random_state=42, class_weight="balanced"),
+            param_grid,
+            cv=5,
+            n_jobs=-1)
+
+        grid.fit(X_train, y_train)
+
+        self.model = grid.best_estimator_
+
+        print("\nBeste parameters:", grid.best_params_)
 
         self.save()
 
@@ -82,6 +97,9 @@ class DemoClassifier:
     def load(self):
         self.model = joblib.load(self.model_path)
 
-
 # python3 -m WintonOverwat train
 # python3 -m WintonOverwat predict competitie.csv
+
+if __name__ == "__main__":
+    model = DemoClassifier()
+    model.train("data-studenten.csv")

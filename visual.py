@@ -38,7 +38,7 @@ def visual_other(df, variable, outcome):
 
 
 def main():
-    df = pd.read_csv("data/data-studenten.csv")
+    df = pd.read_csv("data-studenten.csv")
     header = df.columns
     skip = ["Individu-ID","glucose", "cholesterol", "prognose10jaar", "Unnamed: 0"]
 
