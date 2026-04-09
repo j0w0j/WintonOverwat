@@ -1,0 +1,26 @@
+{
+    "sourceFile": "train_model.py",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 2,
+            "patches": [
+                {
+                    "date": 1775744696220,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1775744710305,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -2,9 +2,9 @@\n from sklearn.model_selection import train_test_split\n from sklearn.ensemble import RandomForestClassifier\n import joblib\n \n-df = pd.read_csv(\"training_data.csv\")\n+df = pd.read_csv(\".csv\")\n \n # Converteer target\n df[\"prognose10jaar\"] = df[\"prognose10jaar\"].map({\"CHD+\": 1, \"CHD-\": 0})\n \n"
+                },
+                {
+                    "date": 1775744720870,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -2,9 +2,9 @@\n from sklearn.model_selection import train_test_split\n from sklearn.ensemble import RandomForestClassifier\n import joblib\n \n-df = pd.read_csv(\"/data/.csv\")\n+df = pd.read_csv(\"/data.csv\")\n \n # Converteer target\n df[\"prognose10jaar\"] = df[\"prognose10jaar\"].map({\"CHD+\": 1, \"CHD-\": 0})\n \n"
+                }
+            ],
+            "date": 1775744696220,
+            "name": "Commit-0",
+            "content": "import pandas as pd\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.ensemble import RandomForestClassifier\nimport joblib\n\ndf = pd.read_csv(\"training_data.csv\")\n\n# Converteer target\ndf[\"prognose10jaar\"] = df[\"prognose10jaar\"].map({\"CHD+\": 1, \"CHD-\": 0})\n\n# Train/test split\ntrain_df, test_df = train_test_split(\n    df,\n    test_size=0.10,\n    random_state=42,\n    stratify=df[\"prognose10jaar\"]\n)\n\n# Features/labels\nX_train = train_df.drop(columns=[\"prognose10jaar\", \"Individu-ID\"])\ny_train = train_df[\"prognose10jaar\"]\n\n# Train model\nmodel = RandomForestClassifier(n_estimators=200, random_state=42)\nmodel.fit(X_train, y_train)\n\n# Save model\njoblib.dump(model, \"model.pkl\")\n\nprint(\"Model opgeslagen als model.pkl\")\n"
+        }
+    ]
+}
